@@ -72,5 +72,10 @@ showcasing your work.
 Provide links to all of the elements you have created (such as data
 sets, functions, R package, video, presentation slides, …).
 
+Your write-up should be concise (aim for 750 - 1500 words), contain
+clearly titled sections covering the motivation for your project, the
+methods you used, and any results you want to highlight. The connection
+to course material needs to be made obvious
+
 For the submission, push the index file, the docs folder and any of your
 creations to the repository, and include a submission link in Canvas.
