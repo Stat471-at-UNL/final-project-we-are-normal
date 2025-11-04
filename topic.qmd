@@ -31,6 +31,12 @@ Create an r package structure that can be used to more directly to handle normal
     -   NHANES
 
     -   baseball data
+    
+    -   Chat created Data
+    
+    -   Iris Data
+    
+    -   HW 2 student/class data
 
 -   A team name and a list of all members on your team
 
