@@ -4,9 +4,35 @@ format: html
 editor: visual
 ---
 
-1.  a motivation of your topic,
-2.  a description of your plan of work. Please provide as much detail as you can,
-3.  a team name and a list of all members on your team
+1.  A motivation of your topic
+
+Create an r package structure that can be used to more directly to handle normal forms of data. We want to incorporate functions that can aid in finding/building keys for different data sets, and move between different normal forms. Our r package would be somehwhat of a cousin to testdat, but will provide functions that more directly handle normal form information.
+
+2.  A description of your plan of work, please provide as much detail as you can
+
+-   To start out, we want to outline the functions within the package we want to create.
+
+-   We will work on the structure of the package in a separate project, including proper documentation so that each function has a description, clear structure, and has been troubleshot with more than one dataset.
+
+    -   is.key() this function would allow any number of column names to be imputed and with a true/false results on whether or not the combination of columns is a key
+
+    -   test.key() allows the same columns, but results in a summary style of information about the imputed columns, including number of duplicates and details of the duplicate rows,
+
+    -   find.keys() ideally this would be able to reveal keys with the lowest number of column combinations that exist in the dataset, potentially an argument exists within this function of n= a number of columns, where the user can see the keys that exist from a certain number of columns and if none exist then the function would return an error
+
+    -   first.normal() results in true/false if the dataset is in first normal form or not
+
+    -   second.normal() results in true/false if the dataset is in second normal form or not
+
+-   Finding data to practice with: ideally we will pick out at least three different datasets with different levels of complexity (likely will use data from previous homework as well). We will use these datasets to test the functions we build.
+
+-   Tentative list:
+
+    -   NHANES
+
+    -   baseball data
+
+-   A team name and a list of all members on your team
 
 Team Name: We are Normal
 
