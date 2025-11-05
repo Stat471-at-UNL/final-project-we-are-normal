@@ -6,13 +6,13 @@ editor: visual
 
 1.  A motivation of your topic
 
-Create an r package structure that can be used to more directly to handle normal forms of data. We want to incorporate functions that can aid in finding/building keys for different data sets, and move between different normal forms. Our r package would be somehwhat of a cousin to testdat, but will provide functions that more directly handle normal form information.
+Create an r package structure that can be used to more directly to handle normal forms of data. We want to incorporate functions that can aid in finding/building keys for different data sets, and move between different normal forms. Our R package would be somewhat of a cousin to testdat, but will provide functions that more directly handle normal form information.
 
 2.  A description of your plan of work, please provide as much detail as you can
 
 -   To start out, we want to outline the functions within the package we want to create.
 
--   We will work on the structure of the package in a separate project, including proper documentation so that each function has a description, clear structure, and has been troubleshot with more than one dataset.
+-   We will work on the structure of the package in a separate project, including proper documentation so that each function has a description, clear structure, and has been troubleshot with more than one data set.
 
     -   is.key() this function would allow any number of column names to be imputed and with a true/false results on whether or not the combination of columns is a key
 
@@ -20,22 +20,22 @@ Create an r package structure that can be used to more directly to handle normal
 
     -   find.keys() ideally this would be able to reveal keys with the lowest number of column combinations that exist in the dataset, potentially an argument exists within this function of n= a number of columns, where the user can see the keys that exist from a certain number of columns and if none exist then the function would return an error
 
-    -   first.normal() results in true/false if the dataset is in first normal form or not
+    -   first.normal() results in true/false if the data set is in first normal form or not
 
-    -   second.normal() results in true/false if the dataset is in second normal form or not
+    -   second.normal() results in true/false if the data set is in second normal form or not
 
--   Finding data to practice with: ideally we will pick out at least three different datasets with different levels of complexity (likely will use data from previous homework as well). We will use these datasets to test the functions we build.
+-   Finding data to practice with: ideally we will pick out at least three different datasets with different levels of complexity (likely will use data from previous homework as well). We will use these data sets to test the functions we build.
 
 -   Tentative list:
 
     -   NHANES
 
     -   baseball data
-    
+
     -   Chat created Data
-    
+
     -   Iris Data
-    
+
     -   HW 2 student/class data
 
 -   A team name and a list of all members on your team
