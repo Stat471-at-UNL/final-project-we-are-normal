@@ -26,6 +26,8 @@ Create an r package structure that can be used to more directly to handle normal
 
 -   We want to be careful with dependencies in functions and how they may interact with missingness and untidy data. We will explore how this may work with different datasets and use error handling to avoid highly conditional functions. Hopefully with testing on a variety of different datasets, we can anticipate how the package will react to abnormalities and control what kind of warnings/error messages pop up for users.
 
+    -   We'll keep the tidy manifesto close to use as we build functions, specifically keeping in mind the rule of reusing existing structures and making a human-friendly package.
+
 -   Finding data to practice with: ideally we will pick out at least three different datasets with different levels of complexity (likely will use data from previous homework as well). We will use these data sets to test the functions we build.
 
 -   Tentative list:
