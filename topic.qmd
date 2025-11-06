@@ -24,19 +24,19 @@ Create an r package structure that can be used to more directly to handle normal
 
     -   second.normal() results in true/false if the data set is in second normal form or not
 
+-   We want to be careful with dependencies in functions and how they may interact with missingness and untidy data. We will explore how this may work with different datasets and use error handling to avoid highly conditional functions. Hopefully with testing on a variety of different datasets, we can anticipate how the package will react to abnormalities and control what kind of warnings/error messages pop up for users.
+
 -   Finding data to practice with: ideally we will pick out at least three different datasets with different levels of complexity (likely will use data from previous homework as well). We will use these data sets to test the functions we build.
 
 -   Tentative list:
 
     -   NHANES
 
-    -   baseball data
-
     -   Chat created Data
 
-    -   Iris Data
-
     -   HW 2 student/class data
+
+    -   We we probably gather as we go to test how functions will react, we will keep track of any datasets used
 
 -   A team name and a list of all members on your team
 
