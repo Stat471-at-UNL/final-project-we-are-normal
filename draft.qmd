@@ -8,6 +8,8 @@ git config pull.rebase false
 ```{r}
 library(readr)
 college <- read_csv("college.csv")
+
+library(dplyr)
 ```
 
 ##Choice of Topic
@@ -23,24 +25,12 @@ Requirements: data = dataframe/tibble, no missing values?
 # Code for is.key
 ```{r}
 is.key <- function(data, ...) {
-  result <- !any(duplicated(data$columns))
-  
-  return(result)
+  key_candidate <- data |> select(...)
+  !any(duplicated(key_candidate))
 }
 
-is.key(college, stabbr)
-
-
-
-is.key <- function(..., .dots) {
-  dots <- c(list(...), .dots)
-  result <- !any(duplicated(dots))
-  
-  return(result)
-  
-}
-
-is.key(college, stabbr)
+is.key(college, c(stabbr,city))
+is.key(college, unitid
 ```
 
 #### Example of test.key
