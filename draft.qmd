@@ -3,25 +3,82 @@ title: "draft"
 format: html
 editor: visual
 ---
+git config pull.rebase false
+
+```{r}
+library(readr)
+college <- read_csv("college.csv")
+```
 
 ##Choice of Topic
 
 ##Plan of Work Details
 
 #### Example of is.key
-is.key(data, column) or is.key(data$column)
+is.key(data, column) or is.key(data$column) or is.key(data, c(column1, column2, ...))
+Logic: testing if there are duplicate observations within the listed column(s)
 Output: TRUE or FALSE
+Requirements: data = dataframe/tibble, no missing values?
+
+# Code for is.key
+```{r}
+is.key <- function(data, ...) {
+  result <- !any(duplicated(data$columns))
+  
+  return(result)
+}
+
+is.key(college, stabbr)
+
+
+
+is.key <- function(..., .dots) {
+  dots <- c(list(...), .dots)
+  result <- !any(duplicated(dots))
+  
+  return(result)
+  
+}
+
+is.key(college, stabbr)
+```
 
 #### Example of test.key
-test.key(data, column) or test.key(data, column)
-Output: Summary. . .
+test.key(data, column) or test.key(data, column) or test.key(data, c(column1, column2, ...), row = TRUE)
+Logic: test for duplicates on only the listed columns, if true count the rows, then do the same for the columns as a key
+Output: Summary including columns that are listed in argument with the number of duplicates in each column, plus a "key" output that lists the duplicates for the key
+Output: If key = 0 duplicates, a message indicates if that the column combination is a key
+Output: If row = TRUE, outputs lists the row numbers that contain duplicates
+Requirements: data = dataframe/tibble, no missing values?
+
+# Code for test.key
+```{r}
+
+
+
+```
 
 #### Example of find.keys
 find.keys(data, n=1:x)
 Output: column a, column b, column c, . . . (for minimum number of columns)
 Output: if number of columns to make key > x, return error: no key of this size or smaller available
 
+```{r}
+
+
+
+```
+
 #### Example of first.normal
 first.normal(data)
 Output: TRUE/FALSE
+
+```{r}
+
+
+
+```
+
+
+
 
