@@ -7,3 +7,20 @@ editor: visual
 ##Choice of Topic
 
 ##Plan of Work Details
+
+#### Example of is.key
+is.key(data, column) or is.key(data$column)
+Output: TRUE or FALSE
+
+#### Example of test.key
+test.key(data, column) or test.key(data, column)
+Output: Summary. . .
+
+#### Example of find.keys
+find.keys(data, n=1:x)
+Output: column a, column b, column c, . . . (for minimum number of columns)
+Output: if number of columns to make key > x, return error: no key of this size or smaller available
+
+#### Example of first.normal
+first.normal(data)
+Output: TRUE/FALSE
