@@ -21,6 +21,7 @@ is.key(data, column) or is.key(data$column) or is.key(data, c(column1, column2, 
 Logic: testing if there are duplicate observations within the listed column(s)
 Output: TRUE or FALSE
 Requirements: data = dataframe/tibble, no missing values?
+Dependencies: Dplyr
 
 # Code for is.key
 ```{r}
@@ -30,7 +31,7 @@ is.key <- function(data, ...) {
 }
 
 is.key(college, c(stabbr,city))
-is.key(college, unitid
+is.key(college, unitid)
 ```
 
 #### Example of test.key
@@ -43,15 +44,18 @@ Requirements: data = dataframe/tibble, no missing values?
 
 # Code for test.key
 ```{r}
-
+test.ket <- function(data, column_list) {
+  
+  
+}
 
 
 ```
 
 #### Example of find.keys
-find.keys(data, n=1:x)
+find.keys(data, n=x)
 Output: column a, column b, column c, . . . (for minimum number of columns)
-Output: if number of columns to make key > x, return error: no key of this size or smaller available
+Output: if number of columns to make key = x, return error: no key of this size available
 
 ```{r}
 
@@ -64,9 +68,18 @@ first.normal(data)
 Output: TRUE/FALSE
 
 ```{r}
-
-
-
+first.normal <- function(data) {
+  if(!any(duplicated(data))) {
+    return("FALSE")
+  } else {
+    
+    tryCatch(
+      return(find.keys(data)),
+      warning = function(w) {
+        print("Unable to find key...")
+      })
+    }
+  } 
 ```
 
 
