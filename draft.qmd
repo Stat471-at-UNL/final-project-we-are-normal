@@ -19,13 +19,13 @@ library(dplyr)
 #### Example of is.key
 is.key(data, column) or is.key(data$column) or is.key(data, c(column1, column2, ...))
 Logic: testing if there are duplicate observations within the listed column(s)
-Output: TRUE or FALSE
+Output: TRUE or FALSE, optional argument to show duplicates in each column
 Requirements: data = dataframe/tibble, no missing values?
 Dependencies: Dplyr
 
 # Code for is.key
 ```{r}
-is.key <- function(data, ...) {
+is.key <- function(data, ..., optional_arguement = FALSE) {
   key_candidate <- data |> select(...)
   !any(duplicated(key_candidate))
 }
@@ -34,33 +34,35 @@ is.key(college, c(stabbr,city))
 is.key(college, unitid)
 ```
 
-#### Example of test.key
-test.key(data, column) or test.key(data, column) or test.key(data, c(column1, column2, ...), row = TRUE)
-Logic: test for duplicates on only the listed columns, if true count the rows, then do the same for the columns as a key
-Output: Summary including columns that are listed in argument with the number of duplicates in each column, plus a "key" output that lists the duplicates for the key
-Output: If key = 0 duplicates, a message indicates if that the column combination is a key
-Output: If row = TRUE, outputs lists the row numbers that contain duplicates
-Requirements: data = dataframe/tibble, no missing values?
 
-# Code for test.key
+#### Example of find.keys
+find.keys(data)
+Output: column a, column b, column c, . . . (for minimum number of columns)
+Output: if number of columns to make key = x, return error: no key of this size available
+Dependency: purrr
+
 ```{r}
-test.ket <- function(data, column_list) {
-  
-  
+library(purrr)
+
+find.keys <- function(data) {
+  column_names <- colnames(data)
+  data |> map_df(function(column_names) {
+    for (colname in ncol(data)) {
+      if(is.key(colname)) {
+        return(print(paste0("Column", colname, "is a key")))
+      } else print("hi")
+    }
+  })
 }
 
 
-```
-
-#### Example of find.keys
-find.keys(data, n=x)
-Output: column a, column b, column c, . . . (for minimum number of columns)
-Output: if number of columns to make key = x, return error: no key of this size available
-
-```{r}
+find.keys(college)
 
 
-
+colnames <- colnames(college)
+ncol(college)
+  
+    
 ```
 
 #### Example of first.normal
