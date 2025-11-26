@@ -16,8 +16,6 @@ Create an r package structure that can be used to more directly to handle normal
 
     -   is.key() this function would allow any number of column names to be imputed and with a true/false results on whether or not the combination of columns is a key
 
-    -   test.key() allows the same columns, but results in a summary style of information about the imputed columns, including number of duplicates and details of the duplicate rows,
-
     -   find.keys() ideally this would be able to reveal keys with the lowest number of column combinations that exist in the dataset, potentially an argument exists within this function of n= a number of columns, where the user can see the keys that exist from a certain number of columns and if none exist then the function would return an error
 
     -   first.normal() results in true/false if the data set is in first normal form or not

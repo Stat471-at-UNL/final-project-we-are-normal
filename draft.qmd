@@ -8,7 +8,9 @@ git config pull.rebase false
 
 ```{r}
 library(readr)
-college <- read_csv("college.csv")
+college <- read_csv("college.csv") 
+auto <- read_csv("auto.csv")
+counties <- read_csv("counties.csv")
 
 library(dplyr)
 ```
@@ -31,29 +33,16 @@ is.key <- function(data, ..., optional_arguement = FALSE) {
 
 is.key(college, c(stabbr,city))
 is.key(college, unitid)
+
+is.key(counties, c(state, county))
 ```
 
 #### Example of find.keys
 
-find.keys(data) Output: column a, column b, column c, . . . (for minimum number of columns) Output: if number of columns to make key = x, return error: no key of this size available Dependency: purrr
+find.keys(data) Output: column a, column b, column c, . . . (for minimum number of columns) Output: if number of columns to make key = x, return error: no key of this size available Dependency: purrr, dplyr, tibble
+Logic: the function cycles through each column in the data, and first tests if there is any duplicates in the single columns. If the columns is distinct already, then that is a key. If not, the function moves on to combinations of columns and tests if they are distinct. The function will make combinations as large as the max.size argument, and lists all possible keys found.
 
 ```{r}
-library(purrr)
-
-find.keys <- function(data) {
-  column_names <- colnames(data)
-  data |> map_df(function(column_names) {
-    for (colname in ncol(data)) {
-      if(is.key(colname)) {
-        return(print(paste0("Column", colname, "is a key")))
-      } else print("hi")
-    }
-  })
-}
-
-
-find.keys(college)
-
 library(dplyr)
 library(purrr)
 library(tibble)
@@ -83,25 +72,120 @@ find.keys <- function(data, max_size = 2) {
   bind_rows(results)
 }
 
-  
-    
+find.keys(college)
+
+find.keys(counties, max_size = 2)
+
+find.keys(auto, max_size = 1)
 ```
 
 #### Example of first.normal
 
-first.normal(data) Output: TRUE/FALSE
+first.normal(data, max.size = n) 
+Output: TRUE/FALSE and reason if false
+Logic: The first condition of first normal form is all atomic columns (tidy format basically) and then uses the find.key function to find a key. If the data is tidy and has a key, than the function will return true and the keys found, and if false it will return which condition is not met.
 
 ```{r}
-first.normal <- function(data) {
-  if(!any(duplicated(data))) {
-    return("FALSE")
-  } else {
-    
-    tryCatch(
-      return(find.keys(data)),
-      warning = function(w) {
-        print("Unable to find key...")
-      })
+first.normal <- function(data, max_size = 2) {
+  
+  is_atomic <- function(x) {
+    all(!sapply(x, function(v) length(v) != 1 || is.list(v)))
+  }
+  
+  atomic_cols <- sapply(data, is_atomic)
+  
+  if (!all(atomic_cols)) {
+    return("FALSE: Dataset is NOT in First Normal Form, non-atomic columns found")
+  }
+
+  keys <- tryCatch(
+    {
+      result <- find.keys(data, max_size = max_size)
+      if (nrow(result) == 0) stop("No keys found")
+      result
+    },
+    error = function(e) {
+      return(NULL)
+    },
+    warning = function(w) {
+      return(NULL)
     }
-  } 
+  )
+  
+  if (is.null(keys)) {
+    return("FALSE: Dataset is NOT in First Normal Form, no candidate key exists")
+  }
+  
+  return(list(
+    message = "TRUE: Dataset is in First Normal Form", #is this message necessary?
+    candidate_keys = keys
+  ))
+}
+
+first.normal(college)
+
+first.normal(auto)
+```
+
+#### Example of second.normal
+
+second.normal(data, max.size = n) 
+Output: TRUE/FALSE and reason if false
+Logic: The first condition of second normal form that it is in first normal form, so that is checked first. Next it needs to check for partial dependencies for keys with >1 columns. For keys that may have partial dependencies, everypossible subset combination will be created and tested for duplicates. If there are no duplicates, then the subset is a key are therefore has a partial dependency.
+
+```{r}
+second.normal <- function(data, max_size = 2) {
+
+  result <- first.normal(data, max_size = max_size)
+
+  if (!is.list(result)) {
+    return("FALSE: Dataset is NOT in Second Normal Form because it is not in First Normal Form")
+  }
+
+  candidate_keys <- result$candidate_keys
+  
+  #data with single column keys cannot have partial dependencies
+  if (any(candidate_keys$key_size == 1)) {
+    return("TRUE: Dataset is in Second Normal Form due to single column key")
+  }
+
+  #checking for partial dependencies and loop through keys
+  for (i in seq_len(nrow(candidate_keys))) {
+
+    key_cols <- unlist(strsplit(candidate_keys$columns[i], ", "))
+
+    if (length(key_cols) > 1) { 
+      
+      #create subsets of key
+      subsets <- unlist(
+        lapply(1:(length(key_cols) - 1),
+               function(k) combn(key_cols, k, simplify = FALSE)
+        ),
+        recursive = FALSE
+      )
+
+      #check if any subset uniquely identifies rows
+      for (subset in subsets) {
+
+        if (!any(duplicated(data[subset]))) {
+          return(paste0(
+            "FALSE: Dataset is NOT in Second Normal Form. ",
+            "Partial dependency detected: subset {",
+            paste(subset, collapse = ", "),
+            "} uniquely identifies rows."
+          ))
+        }
+      }
+    }
+  }
+
+  return(list(
+    message = "TRUE: Dataset in Second Normal Form",
+    candidate_keys = candidate_keys
+  ))
+}
+
+second.normal(auto)
+
+second.normal(college)
 ```
