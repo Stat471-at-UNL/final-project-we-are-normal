@@ -17,13 +17,13 @@ library(dplyr)
 
 ## Choice of Topic
 
-Our missing for this project was to create an r package structure that can be used to more directly to handle normal forms of data. We want to incorporate functions that can aid in finding/building keys for different data sets, and test different normal forms. Our R package would be somewhat of a cousin to testdat, but will provide functions that more directly handle normal form information.
+Our mission for this project was to create an r package structure that can be used to more directly handle normal forms of data. We want to incorporate functions that can aid in finding/building keys for different data sets, and test different normal forms. Our R package will be somewhat of a cousin to testdat, but will provide functions that more directly handle normal form information.
 
-Currently in this draft was have these following functions:
+In this draft was have the following functions:
 
 -   is.key() this function would allow any number of column names to be imputed and with a true/false results on whether or not the combination of columns is a key
 
--   find.keys() ideally this would be able to reveal keys with the lowest number of column combinations that exist in the dataset, potentially an argument exists within this function of n= a number of columns, where the user can see the keys that exist from a certain number of columns and if none exist then the function would return an error
+-   find.keys() this would be able to reveal keys with the lowest number of column combinations that exist in the dataset, potentially an argument exists within this function of n= a number of columns, where the user can see the keys that exist from a certain number of columns and if none exist then the function would return an error
 
 -   first.normal() results in true/false if the data set is in first normal form or not
 
@@ -73,7 +73,7 @@ is.key(counties, c(state, county))
 
 ### Example of find.keys
 
-find.keys(data) Output: column a, column b, column c, . . . (for minimum number of columns) Output: if number of columns to make key = x, return error: no key of this size available Dependency: purrr, dplyr, tibble Logic: the function cycles through each column in the data, and first tests if there is any duplicates in the single columns. If the columns is distinct already, then that is a key. If not, the function moves on to combinations of columns and tests if they are distinct. The function will make combinations as large as the max.size argument, and lists all possible keys found.
+find.keys(data) Output: tibble with each observation being a comma separated list of the columns that make up a key (for maximum number of columns) Output: if number of columns to make key = x, return error: no key of this size available Dependency: purrr, dplyr, tibble Logic: the function cycles through each column in the data, and first tests if there is any duplicates in the single columns. If the columns are distinct already, then that is a key. If not, the function moves on to combinations of columns and tests if they are distinct. The function will make combinations as large as the max.size argument, and lists all possible keys found.
 
 #### Code for find.keys
 
@@ -116,7 +116,7 @@ find.keys(auto, max_size = 1)
 
 ### Example of first.normal
 
-first.normal(data, max.size = n) Output: TRUE/FALSE and reason if false Logic: The first condition of first normal form is all atomic columns (tidy format basically) and then uses the find.key function to find a key. If the data is tidy and has a key, than the function will return true and the keys found, and if false it will return which condition is not met.
+first.normal(data, max.size = n) Output: TRUE/FALSE and reason if false Logic: The first condition of first normal form is all atomic columns (tidy format basically) and then uses the find.key function to find a key. If the data is tidy and has a key, then the function will return true and the keys found, and if false it will return which condition is not met.
 
 #### Code for first.normal
 
@@ -164,7 +164,7 @@ first.normal(auto)
 
 ### Example of second.normal
 
-second.normal(data, max.size = n) Output: TRUE/FALSE and reason if false Logic: The first condition of second normal form that it is in first normal form, so that is checked first. Next it needs to check for partial dependencies for keys with \>1 columns. For keys that may have partial dependencies, everypossible subset combination will be created and tested for duplicates. If there are no duplicates, then the subset is a key are therefore has a partial dependency.
+second.normal(data, max.size = n) Output: TRUE/FALSE and reason if false Logic: The first condition of second normal form that it is in first normal form, so that is checked first. Next it needs to check for partial dependencies for keys with \>1 columns. For keys that may have partial dependencies, every possible subset combination will be created and tested for duplicates. If there are no duplicates, then the subset is a key are therefore has a partial dependency.
 
 #### Code for second.normal
 
