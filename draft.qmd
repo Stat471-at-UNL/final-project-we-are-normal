@@ -3,6 +3,7 @@ title: "draft"
 format: html
 editor: visual
 ---
+
 git config pull.rebase false
 
 ```{r}
@@ -17,13 +18,11 @@ library(dplyr)
 ##Plan of Work Details
 
 #### Example of is.key
-is.key(data, column) or is.key(data$column) or is.key(data, c(column1, column2, ...))
-Logic: testing if there are duplicate observations within the listed column(s)
-Output: TRUE or FALSE, optional argument to show duplicates in each column
-Requirements: data = dataframe/tibble, no missing values?
-Dependencies: Dplyr
+
+is.key(data, column) or is.key(data\$column) or is.key(data, c(column1, column2, ...)) Logic: testing if there are duplicate observations within the listed column(s) Output: TRUE or FALSE, optional argument to show duplicates in each column Requirements: data = dataframe/tibble, no missing values? Dependencies: Dplyr
 
 # Code for is.key
+
 ```{r}
 is.key <- function(data, ..., optional_arguement = FALSE) {
   key_candidate <- data |> select(...)
@@ -34,12 +33,9 @@ is.key(college, c(stabbr,city))
 is.key(college, unitid)
 ```
 
-
 #### Example of find.keys
-find.keys(data)
-Output: column a, column b, column c, . . . (for minimum number of columns)
-Output: if number of columns to make key = x, return error: no key of this size available
-Dependency: purrr
+
+find.keys(data) Output: column a, column b, column c, . . . (for minimum number of columns) Output: if number of columns to make key = x, return error: no key of this size available Dependency: purrr
 
 ```{r}
 library(purrr)
@@ -58,16 +54,42 @@ find.keys <- function(data) {
 
 find.keys(college)
 
+library(dplyr)
+library(purrr)
+library(tibble)
 
-colnames <- colnames(college)
-ncol(college)
+find.keys <- function(data, max_size = 2) {
+  cols <- colnames(data)
+  n <- length(cols)
+  
+  results <- list()
+
+  for (k in 1:min(max_size, n)) {
+    combos <- combn(cols, k, simplify = FALSE)
+
+    for (combo in combos) {
+      if (is.key(data, combo)) {
+        results <- append(results, list(
+          tibble(key_size = k, columns = paste(combo, collapse = ", "))
+        ))
+      }
+    }
+  }
+
+  if (length(results) == 0) {
+    return(tibble(key_size = integer(), columns = character()))
+  }
+
+  bind_rows(results)
+}
+
   
     
 ```
 
 #### Example of first.normal
-first.normal(data)
-Output: TRUE/FALSE
+
+first.normal(data) Output: TRUE/FALSE
 
 ```{r}
 first.normal <- function(data) {
@@ -83,7 +105,3 @@ first.normal <- function(data) {
     }
   } 
 ```
-
-
-
-
