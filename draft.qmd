@@ -60,15 +60,15 @@ is.key(data, column) or is.key(data\$column) or is.key(data, c(column1, column2,
 #### Code for is.key
 
 ```{r}
-is.key <- function(data, ..., optional_arguement = FALSE) {
+is_key <- function(data, ..., optional_arguement = FALSE) {
   key_candidate <- data |> select(...)
   !any(duplicated(key_candidate))
 }
 
-is.key(college, c(stabbr,city))
-is.key(college, unitid)
+is_key(college, c(stabbr,city))
+is_key(college, unitid)
 
-is.key(counties, c(state, county))
+is_key(counties, c(state, county))
 ```
 
 ### Example of find.keys
@@ -78,40 +78,39 @@ find.keys(data) Output: tibble with each observation being a comma separated lis
 #### Code for find.keys
 
 ```{r}
-library(dplyr)
-library(purrr)
-library(tibble)
+library(dplyr) 
+library(purrr) 
 
-find.keys <- function(data, max_size = 2) {
-  cols <- colnames(data)
-  n <- length(cols)
+find_keys <- function(data, max_size = 1) { 
+  cols <- colnames(data) 
+  n <- length(cols) 
+  results <- list() 
   
-  results <- list()
+  for (k in 1:min(max_size, n)) { 
+    combos <- combn(cols, k, simplify = FALSE) 
+    
+    for (combo in combos) { 
+      if (is_key(data, combo)) { 
+        results <- append(results, list( 
+          tibble(key_size = k, columns = paste(combo, collapse = ", ")) 
+          )) 
+        } 
+      } 
+    } 
+  
+  if (nrow(bind_rows(results)) == 0) { 
+    return(paste0("No keys of size ", max_size, " found, pick larger max size")) 
+    } else { 
+      bind_rows(results) 
+      } 
+  } 
 
-  for (k in 1:min(max_size, n)) {
-    combos <- combn(cols, k, simplify = FALSE)
+find_keys(college) 
 
-    for (combo in combos) {
-      if (is.key(data, combo)) {
-        results <- append(results, list(
-          tibble(key_size = k, columns = paste(combo, collapse = ", "))
-        ))
-      }
-    }
-  }
+find_keys(counties) 
 
-  if (length(results) == 0) {
-    return(tibble(key_size = integer(), columns = character()))
-  }
+find_keys(auto, max_size = 3)
 
-  bind_rows(results)
-}
-
-find.keys(college)
-
-find.keys(counties, max_size = 2)
-
-find.keys(auto, max_size = 1)
 ```
 
 ### Example of first.normal
@@ -121,7 +120,7 @@ first.normal(data, max.size = n) Output: TRUE/FALSE and reason if false Logic: T
 #### Code for first.normal
 
 ```{r}
-first.normal <- function(data, max_size = 2) {
+first_normal <- function(data, max_size = 2) {
   
   is_atomic <- function(x) {
     all(!sapply(x, function(v) length(v) != 1 || is.list(v)))
@@ -135,7 +134,7 @@ first.normal <- function(data, max_size = 2) {
 
   keys <- tryCatch(
     {
-      result <- find.keys(data, max_size = max_size)
+      result <- find_keys(data, max_size = max_size)
       if (nrow(result) == 0) stop("No keys found")
       result
     },
@@ -152,14 +151,14 @@ first.normal <- function(data, max_size = 2) {
   }
   
   return(list(
-    message = "TRUE: Dataset is in First Normal Form", #is this message necessary?
+    message = "TRUE",
     candidate_keys = keys
   ))
 }
 
-first.normal(college)
+first_normal(college)
 
-first.normal(auto)
+first_normal(auto)
 ```
 
 ### Example of second.normal
@@ -169,9 +168,9 @@ second.normal(data, max.size = n) Output: TRUE/FALSE and reason if false Logic: 
 #### Code for second.normal
 
 ```{r}
-second.normal <- function(data, max_size = 2) {
+second_normal <- function(data, max_size = 2) {
 
-  result <- first.normal(data, max_size = max_size)
+  result <- first_normal(data, max_size = max_size)
 
   if (!is.list(result)) {
     return("FALSE: Dataset is NOT in Second Normal Form because it is not in First Normal Form")
@@ -220,7 +219,7 @@ second.normal <- function(data, max_size = 2) {
   ))
 }
 
-second.normal(auto)
+second_normal(auto)
 
-second.normal(college)
+second_normal(college)
 ```
