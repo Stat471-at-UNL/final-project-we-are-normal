@@ -55,7 +55,15 @@ In this draft was have the following functions:
 
 ### Example of is.key
 
-is.key(data, column) or is.key(data\$column) or is.key(data, c(column1, column2, ...)) Logic: testing if there are duplicate observations within the listed column(s) Output: TRUE or FALSE, optional argument to show duplicates in each column Requirements: data = dataframe/tibble, no missing values? Dependencies: Dplyr
+is.key(data, column) or is.key(data\$column) or is.key(data, c(column1, column2, ...))
+
+Logic: testing if there are duplicate observations within the listed column(s)
+
+Output: TRUE or FALSE, optional argument to show duplicates in each column
+
+Requirements: data = dataframe/tibble, no missing values?
+
+Dependencies: Dplyr
 
 #### Code for is.key
 
@@ -73,7 +81,15 @@ is_key(counties, c(state, county))
 
 ### Example of find.keys
 
-find.keys(data) Output: tibble with each observation being a comma separated list of the columns that make up a key (for maximum number of columns) Output: if number of columns to make key = x, return error: no key of this size available Dependency: purrr, dplyr, tibble Logic: the function cycles through each column in the data, and first tests if there is any duplicates in the single columns. If the columns are distinct already, then that is a key. If not, the function moves on to combinations of columns and tests if they are distinct. The function will make combinations as large as the max.size argument, and lists all possible keys found.
+find.keys(data)
+
+Output: tibble with each observation being a comma separated list of the columns that make up a key (for maximum number of columns)
+
+Output: if number of columns to make key = x, return error: no key of this size available
+
+Dependency: purrr, dplyr, tibble
+
+Logic: the function cycles through each column in the data, and first tests if there is any duplicates in the single columns. If the columns are distinct already, then that is a key. If not, the function moves on to combinations of columns and tests if they are distinct. The function will make combinations as large as the max.size argument, and lists all possible keys found.
 
 #### Code for find.keys
 
@@ -115,7 +131,11 @@ find_keys(auto, max_size = 3)
 
 ### Example of first.normal
 
-first.normal(data, max.size = n) Output: TRUE/FALSE and reason if false Logic: The first condition of first normal form is all atomic columns (tidy format basically) and then uses the find.key function to find a key. If the data is tidy and has a key, then the function will return true and the keys found, and if false it will return which condition is not met.
+first.normal(data, max.size = n)
+
+Output: TRUE/FALSE and reason if false
+
+Logic: The first condition of first normal form is all atomic columns (tidy format basically) and then uses the find.key function to find a key. If the data is tidy and has a key, then the function will return true and the keys found, and if false it will return which condition is not met.
 
 #### Code for first.normal
 
@@ -132,28 +152,14 @@ first_normal <- function(data, max_size = 2) {
     return("FALSE: Dataset is NOT in First Normal Form, non-atomic columns found")
   }
 
-  keys <- tryCatch(
-    {
       result <- find_keys(data, max_size = max_size)
-      if (nrow(result) == 0) stop("No keys found")
       result
-    },
-    error = function(e) {
-      return(NULL)
-    },
-    warning = function(w) {
-      return(NULL)
-    }
-  )
-  
-  if (is.null(keys)) {
+      
+  if (is.character(result)) {
     return("FALSE: Dataset is NOT in First Normal Form, no candidate key exists")
   }
   
-  return(list(
-    message = "TRUE",
-    candidate_keys = keys
-  ))
+  return("TRUE")
 }
 
 first_normal(college)
@@ -163,7 +169,11 @@ first_normal(auto)
 
 ### Example of second.normal
 
-second.normal(data, max.size = n) Output: TRUE/FALSE and reason if false Logic: The first condition of second normal form that it is in first normal form, so that is checked first. Next it needs to check for partial dependencies for keys with \>1 columns. For keys that may have partial dependencies, every possible subset combination will be created and tested for duplicates. If there are no duplicates, then the subset is a key are therefore has a partial dependency.
+second.normal(data, max.size = n)
+
+Output: TRUE/FALSE and reason if false
+
+Logic: The first condition of second normal form that it is in first normal form, so that is checked first. Next it needs to check for partial dependencies for keys with \>1 columns. For keys that may have partial dependencies, every possible subset combination will be created and tested for duplicates. If there are no duplicates, then the subset is a key are therefore has a partial dependency.
 
 #### Code for second.normal
 
@@ -214,7 +224,7 @@ second_normal <- function(data, max_size = 2) {
   }
 
   return(list(
-    message = "TRUE: Dataset in Second Normal Form",
+    message = "TRUE",
     candidate_keys = candidate_keys
   ))
 }
