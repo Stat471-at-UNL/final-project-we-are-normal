@@ -164,7 +164,9 @@ first_normal <- function(data, max_size = 2) {
 
 first_normal(college)
 
-first_normal(auto)
+first_normal(auto, max_size = 2)
+
+
 ```
 
 ### Example of second.normal
@@ -178,29 +180,22 @@ Logic: The first condition of second normal form that it is in first normal form
 #### Code for second.normal
 
 ```{r}
-second_normal <- function(data, max_size = 2) {
+second_normal <- function(data, max_size = 1) {
 
   result <- first_normal(data, max_size = max_size)
+  key_results <- find_keys(data, max_size = max_size)
 
-  if (!is.list(result)) {
+  if (result == "FALSE: Dataset is NOT in First Normal Form, no candidate key exists" | 
+      result == "FALSE: Dataset is NOT in First Normal Form, non-atomic columns found") {
     return("FALSE: Dataset is NOT in Second Normal Form because it is not in First Normal Form")
   }
 
-  candidate_keys <- result$candidate_keys
-  
-  #data with single column keys cannot have partial dependencies
-  if (any(candidate_keys$key_size == 1)) {
-    return("TRUE: Dataset is in Second Normal Form due to single column key")
-  }
+  for (i in seq_len(nrow(key_results))) {
 
-  #checking for partial dependencies and loop through keys
-  for (i in seq_len(nrow(candidate_keys))) {
-
-    key_cols <- unlist(strsplit(candidate_keys$columns[i], ", "))
+    key_cols <- unlist(strsplit(key_results$columns[i], ", "))
 
     if (length(key_cols) > 1) { 
       
-      #create subsets of key
       subsets <- unlist(
         lapply(1:(length(key_cols) - 1),
                function(k) combn(key_cols, k, simplify = FALSE)
@@ -208,7 +203,6 @@ second_normal <- function(data, max_size = 2) {
         recursive = FALSE
       )
 
-      #check if any subset uniquely identifies rows
       for (subset in subsets) {
 
         if (!any(duplicated(data[subset]))) {
@@ -223,13 +217,13 @@ second_normal <- function(data, max_size = 2) {
     }
   }
 
-  return(list(
-    message = "TRUE",
-    candidate_keys = candidate_keys
-  ))
+  return("TRUE")
 }
 
 second_normal(auto)
+second_normal(auto, max_size = 2)
+second_normal(auto, max_size = 3)
 
 second_normal(college)
+
 ```
